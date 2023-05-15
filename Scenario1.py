@@ -1,7 +1,7 @@
 from FourRooms import FourRooms
 import matplotlib.pyplot as plt
 import numpy as np
-from RLAgent import RLAgent
+from RLAgent import RLAgent1
 import utils
 from time import sleep
 import os
@@ -11,7 +11,7 @@ def main():
 	env = FourRooms('simple')
 
 	# Agent
-	agent = RLAgent(num_states=13*13,
+	agent = RLAgent1(num_states=13*13,
 					num_actions=4,
 					alpha=0.1,
 					gamma=0.99,
