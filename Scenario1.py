@@ -1,73 +1,50 @@
-import matplotlib
-import tkinter as tk
-matplotlib.use('TkAgg')
-
-import os
-import shutil
-
-import utils
-
-from time import sleep
-
-
-
-def clearImages():
-
-	folder_path = "./images"
-
-	# Remove all files and subdirectories in the folder
-	shutil.rmtree(folder_path)
-
-	# Recreate the folder
-	os.mkdir(folder_path)
-
-def checkImages():
-	if not os.path.exists('images'):
-		os.makedirs('images')
-	else:
-		clearImages()
-		
-checkImages()
-
-
-from RLAgent import RLAgent
 from FourRooms import FourRooms
+import matplotlib.pyplot as plt
+import numpy as np
+from RLAgent import RLAgent
 
-agent1: RLAgent = RLAgent()
+def main():
+	# Environment
+	env = FourRooms('simple')
 
-rooms: FourRooms = FourRooms('simple')
+	# Agent
+	agent = RLAgent(num_states=13*13,
+					num_actions=4,
+					alpha=0.1,
+					gamma=0.99,
+					epsilon=0.1)
 
-agent1.set_room(rooms)
+	# Training
+	num_episodes = 1000
+	rewards = np.zeros(num_episodes)
+	for i in range(num_episodes):
+		env.newEpoch()
+		x, y = env.getPosition()
+		state = 13*x+y
+		done = False
+		total_reward = 0
+		while not done:
+			action = agent.choose_action(state)
+			gridType, newPos, packagesRemaining, isTerminal = env.takeAction(action)
+			
+			next_state = 13*newPos[0] + newPos[1]
+			reward = 100 if gridType > 0 else 0
+			done = isTerminal
 
-aTypes = ['UP', 'DOWN', 'LEFT', 'RIGHT']
-gTypes = ['EMPTY', 'RED', 'GREEN', 'BLUE']
+			#next_state, reward, done, _ = env.step(action)
 
-print('Agent starts at: {0}'.format(rooms.getPosition()))
+			agent.learn(state, action, reward, next_state, done)
+			state = next_state
+			total_reward += reward
+		rewards[i] = total_reward
 
-# I know i'm accessing a private member
-# I'm not modifying it, i'm just getting the current space
-env = rooms._FourRooms__environment.copy() # type: ignore[attr]
+	# Plot Results
+	#plt.plot(rewards)
+	#plt.xlabel('Episode')
+	#plt.ylabel('Reward')
+	#plt.show()
 
-for i in range(15):
+	# Show Path
+	#env.showPath(-1)
 
-	os.system('clear')
-
-	currX, currY = rooms._FourRooms__current_pos # type: ignore[attr]
-	env[currY][currX] = 4
-
-	
-	act: int = agent1.get_next_move()
-
-	gridType, newPos, packagesRemaining, isTerminal = agent1.move(act)
-
-	currX, currY = rooms._FourRooms__current_pos # type: ignore[attr]
-	env[currY][currX] = 5
-
-	utils.print_colored_maze(env)
-
-	print("Agent took {0} action and moved to {1} of type {2}".format (aTypes[act], newPos, gTypes[gridType]))
-	sleep(.4)
-	if isTerminal:
-		break
-		
-
+main()
