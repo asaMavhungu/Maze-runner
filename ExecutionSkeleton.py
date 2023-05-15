@@ -1,28 +1,10 @@
 from FourRooms import FourRooms
 import matplotlib
+import utils
 import tkinter as tk
 matplotlib.use('TkAgg')
 
 import os
-import shutil
-
-
-
-def clearImages():
-
-    folder_path = "./images"
-
-    # Remove all files and subdirectories in the folder
-    shutil.rmtree(folder_path)
-
-    # Recreate the folder
-    os.mkdir(folder_path)
-
-def checkImages():
-    if not os.path.exists('images'):
-        os.makedirs('images')
-    else:
-        clearImages()
 
 def main():
 
@@ -40,25 +22,40 @@ def main():
 
     print('Agent starts at: {0}'.format(fourRoomsObj.getPosition()))
 
+    # I know i'm accessing a private member
+    # I'm not modifying it, i'm just getting the current space
+    env = fourRoomsObj._FourRooms__environment.copy() # type: ignore[attr]
+
+    from time import sleep
+
     i = 0 
     for act in actSeq:
+        os.system('clear')
 
         i+= 1
-        fourRoomsObj.showPath(-1, f"images/asa{i}.png")
+
+        currX, currY = fourRoomsObj._FourRooms__current_pos # type: ignore[attr]
+        env[currY][currX] = 4
 
         gridType, newPos, packagesRemaining, isTerminal = fourRoomsObj.takeAction(act)
+
+        currX, currY = fourRoomsObj._FourRooms__current_pos # type: ignore[attr]
+        env[currY][currX] = 5
+
+        utils.print_colored_maze(env)
 
         print("Agent took {0} action and moved to {1} of type {2}".format (aTypes[act], newPos, gTypes[gridType]))
 
         if isTerminal:
             break
 
+        sleep(.4)
+
     # Don't forget to call newEpoch when you start a new simulation run
 
     # Show Path
-    fourRoomsObj.showPath(-1)
+    #fourRoomsObj.showPath(-1)
 
 
 if __name__ == "__main__":
-    clearImages()
     main()
