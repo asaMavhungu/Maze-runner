@@ -42,15 +42,6 @@ def main():
 	
 			gridType, newPos, packagesRemaining, isTerminal = env.takeAction(action)
 
-			#currX, currY = env._FourRooms__current_pos # type: ignore[attr]
-			#cpy[currY][currX] = 5
-
-
-			#os.system('clear')
-			#utils.print_colored_maze(cpy)
-
-			#sleep(.05)
-			
 			next_state = 13*newPos[0] + newPos[1]
 			if gridType > 0:
 				reward = 10*gridType
@@ -58,8 +49,6 @@ def main():
 				reward = 0
 
 			done = isTerminal
-
-			#next_state, reward, done, _ = env.step(action)
 
 			agent.learn(state, action, reward, next_state, done)
 			state = next_state
@@ -70,12 +59,6 @@ def main():
 		print(f"Episode: {i}")
 		print(f"Total reward:{total_reward}")
 		sleep(.05)
-
-	# Plot Results
-	#plt.plot(rewards)
-	#plt.xlabel('Episode')
-	#plt.ylabel('Reward')
-	#plt.show()
 
 	# Show Path
 	#env.showPath(-1)
