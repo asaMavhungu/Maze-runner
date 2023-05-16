@@ -14,7 +14,7 @@ def main(args):
 	gTypes = ['EMPTY', 'RED', 'GREEN', 'BLUE']
 
 	# Environment
-	env = FourRooms('rgb', args.stochastic)
+	env = FourRooms('multi', args.stochastic)
 
 	# Agent
 	agent = RLAgent(num_states=13*13*8,
@@ -108,7 +108,7 @@ def main(args):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--stochastic', action='store_true', help='Add stochasticity to action space')
+	parser.add_argument('-s', '-stochastic', '--stochastic', action='store_true', help='Add stochasticity to action space')
 	args = parser.parse_args()
 	main(args)
 	print(args.stochastic)

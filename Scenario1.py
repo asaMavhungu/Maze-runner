@@ -104,8 +104,8 @@ def main(args):
 	env.showPath(-1)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--stochastic', action='store_true', help='Add stochasticity to action space')
-    args = parser.parse_args()
-    main(args)
-    print(args.stochastic)
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-s', '-stochastic', '--stochastic', action='store_true', help='Add stochasticity to action space')    
+	args = parser.parse_args()
+	main(args)
+	print(args.stochastic)
