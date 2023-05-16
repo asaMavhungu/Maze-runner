@@ -1,9 +1,9 @@
 
-"""
-Functaion takes in a numpy array and prints it out to the console as a maze
-The maze is color coded
-"""
 def print_colored_maze(maze):
+    """
+    Functaion takes in a numpy array and prints it out to the console as a maze
+    The maze is color coded
+    """
     for i in range(len(maze)):
         for j in range(len(maze[0])):
             if maze[i][j] == -1:
