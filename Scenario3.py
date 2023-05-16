@@ -1,7 +1,7 @@
 from FourRooms import FourRooms
 import matplotlib.pyplot as plt
 import numpy as np
-from RLAgent import RLAgent1
+from RLAgent import RLAgent
 import utils
 from time import sleep
 import os
@@ -16,7 +16,7 @@ def main():
 	env = FourRooms('rgb')
 
 	# Agent
-	agent = RLAgent1(num_states=13*13*8,
+	agent = RLAgent(num_states=13*13*8,
 					num_actions=4,
 					alpha=0.1,
 					gamma=0.99,
@@ -38,6 +38,7 @@ def main():
 
 		packages = []
 		binary2 = [0,0,0]
+		next_package = 1
 
 		origin = env.getPosition()
 
@@ -55,19 +56,18 @@ def main():
 			gridType, newPos, packagesRemaining, isTerminal = env.takeAction(action)
 
 			
-		
+			reward = 0
 			next_state = (13*newPos[0] + newPos[1])
 			if gridType > 0 and gridType not in packages:
-				
-				packages.append(gridType)
-				reward = 100*(4-len(packages))
-
-				binary2[gridType-1] = 1
-
-			elif cpy[currY][currX] == 4:
-				reward = -20 # Punnish backtracking
-			else:
-				reward = -8
+				if gridType == next_package:
+					packages.append(gridType)
+					next_package += 1
+					reward = 100*(4-len(packages))
+					binary2[gridType-1] = 1
+				else:
+					# If current package is not the next one in sequence, send the agent back to origin
+					reward = -100
+					break
 
 			
 			offset = binary2[0]* 2**2 + binary2[1]* 2**1 + binary2[2]* 2**0
@@ -103,7 +103,7 @@ def main():
 	plt.show()
 
 	# Show Path
-	#env.showPath(-1)
+	env.showPath(-1)
 
 if __name__ == "__main__":
-    main()
+	main()

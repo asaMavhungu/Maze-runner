@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Tuple
 
-class RLAgent1:
+class RLAgent:
     def __init__(self, num_states: int, num_actions: int, alpha: float, gamma: float, epsilon: float):
         self.Q = np.zeros((num_states, num_actions))
         self.alpha = alpha
