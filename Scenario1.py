@@ -96,8 +96,9 @@ def main(args):
 
 	# Plot Results
 	plt.plot(rewards)
-	plt.xlabel('Episode')
-	plt.ylabel('Reward')
+	plt.title("Scenerio1 : Rewards per Episode")
+	plt.xlabel("Episode")
+	plt.ylabel("Reward")
 	plt.show()
 
 	# Show Path

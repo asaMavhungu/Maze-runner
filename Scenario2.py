@@ -96,6 +96,7 @@ def main(args):
 		utils.print_colored_maze(cpy)
 		print(f"Episode: {i}")
 		print(f"Packs: {packages}")
+		print(f"Pack Order: {[ gTypes[i] for i in packages]}")
 		print(f"Total reward:{total_reward}")
 
 		print('Agent starts at: {0}'.format(origin))
@@ -106,8 +107,9 @@ def main(args):
 
 	# Plot Results
 	plt.plot(rewards)
-	plt.xlabel('Episode')
-	plt.ylabel('Reward')
+	plt.title("Scenerio2 : Rewards per Episode")
+	plt.xlabel("Episode")
+	plt.ylabel("Reward")
 	plt.show()
 
 	# Show Path
