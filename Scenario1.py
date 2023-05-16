@@ -51,6 +51,7 @@ def main(args):
 
 		origin = env.getPosition()
 
+		# Save the state transitions for the episode
 		actPosGrid = []
 
 		while not done:
