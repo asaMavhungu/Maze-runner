@@ -85,6 +85,7 @@ def main(args):
 		rewards[i] = total_reward
 		os.system('clear')
 		utils.print_colored_maze(cpy)
+		sleep(.05)
 		print(f"Episode: {i}")
 		print(f"Total reward:{total_reward}")
 
