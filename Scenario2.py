@@ -5,15 +5,16 @@ from RLAgent import RLAgent
 import utils
 from time import sleep
 import os
+import argparse
 
 
-def main():
+def main(args):
 
 	aTypes = ['UP', 'DOWN', 'LEFT', 'RIGHT']
 	gTypes = ['EMPTY', 'RED', 'GREEN', 'BLUE']
 
 	# Environment
-	env = FourRooms('multi')
+	env = FourRooms('multi', args.stochastic)
 
 	# Agent
 	agent = RLAgent(num_states=13*13*8,
@@ -33,12 +34,21 @@ def main():
 		done = False
 		total_reward = 0
 		
-		currX, currY = env._FourRooms__current_pos # type: ignore[attr]
+		currX, currY = env.getPosition()
 		cpy[currY][currX] = 5
 
 		packages = []
+
+		"""
+		Use binary number to show current picked up packages
+		[0,0,0] : No packages and takes up table[0:13*13-1]
+		[0,1,0] : 1 package picked up, the second one only. takes up table[2(13*13): 3(13*13)-1]
+		This is to try and get a dimension for each different current picked up packages state
+		This results in 8 possible states
+		"""
 		binary2 = [0,0,0]
 
+		# Save the state transitions for the episode
 		origin = env.getPosition()
 
 		actPosGrid = []
@@ -46,16 +56,14 @@ def main():
 		while not done:
 			action = agent.choose_action(state)
 
-			currX, currY = env._FourRooms__current_pos # type: ignore[attr]
+			currX, currY = env.getPosition()
 
 			val = cpy[currY][currX]
 			if val == 0:
 				cpy[currY][currX] = 4
 	
 			gridType, newPos, packagesRemaining, isTerminal = env.takeAction(action)
-
-			
-		
+	
 			next_state = (13*newPos[0] + newPos[1])
 			if gridType > 0 and gridType not in packages:
 				
@@ -106,4 +114,8 @@ def main():
 	env.showPath(-1)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--stochastic', action='store_true', help='Add stochasticity to action space')
+    args = parser.parse_args()
+    main(args)
+    print(args.stochastic)
