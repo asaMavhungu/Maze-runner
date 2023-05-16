@@ -5,10 +5,12 @@ from RLAgent import RLAgent
 import utils
 from time import sleep
 import os
+import argparse
 
-def main():
+def main(args):
+	
 	# Environment
-	env = FourRooms('simple')
+	env = FourRooms('simple', args.stochastic)
 
 	# Agent
 	agent = RLAgent(num_states=13*13,
@@ -64,4 +66,8 @@ def main():
 	env.showPath(-1)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--stochastic', action='store_true', help='Add stochasticity to action space')
+    args = parser.parse_args()
+    main(args)
+    print(args.stochastic)
