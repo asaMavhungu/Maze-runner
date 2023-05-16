@@ -28,19 +28,3 @@ def print_colored_maze(maze):
                 # print magenta if value is 1
                 print("\u001b[45m  \u001b[0m", end="")
         print()
-
-def clearImages():
-
-    folder_path = "./images"
-
-    # Remove all files and subdirectories in the folder
-    shutil.rmtree(folder_path)
-
-    # Recreate the folder
-    os.mkdir(folder_path)
-
-def checkImages():
-    if not os.path.exists('images'):
-        os.makedirs('images')
-    else:
-        clearImages()
