@@ -9,6 +9,9 @@ import argparse
 
 def main(args):
 
+	aTypes = ['UP', 'DOWN', 'LEFT', 'RIGHT']
+	gTypes = ['EMPTY', 'RED', 'GREEN', 'BLUE']
+
 	# Environment
 	env = FourRooms('simple', args.stochastic)
 
@@ -37,12 +40,18 @@ def main(args):
 
 
 		x, y = env.getPosition()
+		# Use the coordinates of the position to define a state
 		state = 13*x+y
 		done = False
 		total_reward = 0
 		
 		currX, currY = env.getPosition()
+		# Update my copy of the space
 		cpy[currY][currX] = 5
+
+		origin = env.getPosition()
+
+		actPosGrid = []
 
 		while not done:
 			action = agent.choose_action(state)
@@ -50,28 +59,45 @@ def main(args):
 			currX, currY = env.getPosition()
 
 			val = cpy[currY][currX]
+			# Only over-write white spaces in the environment copy
 			if val == 0:
 				cpy[currY][currX] = 4
 	
 			gridType, newPos, packagesRemaining, isTerminal = env.takeAction(action)
-
+			
+			# Update the state
 			next_state = 13*newPos[0] + newPos[1]
 			if gridType > 0:
-				reward = 10*gridType
+				reward = 100 # Reward getting to the end
 			else:
-				reward = 0
+				reward = -1 # Punish each step taken to encourage taking shortest path
 
 			done = isTerminal
 
+			# Update the tables
 			agent.learn(state, action, reward, next_state, done)
 			state = next_state
 			total_reward += reward
+
+			actPosGrid.append((action, newPos, gridType))
+
 		rewards[i] = total_reward
 		os.system('clear')
 		utils.print_colored_maze(cpy)
 		print(f"Episode: {i}")
 		print(f"Total reward:{total_reward}")
+
+		print('Agent starts at: {0}'.format(origin))
+
+		for ten in actPosGrid:
+			print("Agent took {0} action and moved to {1} of type {2}".format (aTypes[ten[0]], ten[1], gTypes[ten[2]]))
 		sleep(.05)
+
+	# Plot Results
+	plt.plot(rewards)
+	plt.xlabel('Episode')
+	plt.ylabel('Reward')
+	plt.show()
 
 	# Show Path
 	env.showPath(-1)
