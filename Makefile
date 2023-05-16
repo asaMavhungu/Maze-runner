@@ -1,5 +1,6 @@
 install: venv
-	. venv/bin/activate; pip3 install -Ur requirements.txt
+	pip3 install -Ur requirements.txt
+	. venv/bin/activate
 
 venv :
 	test -d venv || virtualenv venv
