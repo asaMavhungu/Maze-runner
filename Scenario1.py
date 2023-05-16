@@ -8,7 +8,7 @@ import os
 import argparse
 
 def main(args):
-	
+
 	# Environment
 	env = FourRooms('simple', args.stochastic)
 
@@ -24,19 +24,30 @@ def main(args):
 	rewards = np.zeros(num_episodes)
 	for i in range(num_episodes):
 		env.newEpoch()
+
+		"""
+		I know i'm accessing a private member
+		I'm not modifying it, i'm just getting a shallow copy of current space
+		I need this to print out to the terminal at the end of each episode
+		to get an idea of how my agent is training
+		I would've added a getter in FourRooms that returns this copy but that was
+		not allowed in the brief
+		"""
 		cpy = env._FourRooms__environment.copy() # type: ignore[attr]
+
+
 		x, y = env.getPosition()
 		state = 13*x+y
 		done = False
 		total_reward = 0
 		
-		currX, currY = env._FourRooms__current_pos # type: ignore[attr]
+		currX, currY = env.getPosition()
 		cpy[currY][currX] = 5
 
 		while not done:
 			action = agent.choose_action(state)
 
-			currX, currY = env._FourRooms__current_pos # type: ignore[attr]
+			currX, currY = env.getPosition()
 
 			val = cpy[currY][currX]
 			if val == 0:
