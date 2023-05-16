@@ -2,7 +2,6 @@ import numpy
 import random
 
 from matplotlib import pyplot, colors
-from typing import Tuple, Optional
 
 
 class FourRooms:
@@ -77,7 +76,7 @@ class FourRooms:
         self.__is_terminal = False
         self.__pathRecords = [[]]
 
-    def takeAction(self, action: int) -> Tuple[int, Tuple[int, int], int, bool]:
+    def takeAction(self, action: int) -> (int, (int, int), int, bool):
 
         if self.__is_terminal:
             raise Exception('Tried to Take Action while Simulation was in a Terminal State.')
@@ -132,7 +131,7 @@ class FourRooms:
 
         self.__is_terminal = False
 
-    def showPath(self, index: int, savefig: Optional[str] = None):
+    def showPath(self, index: int, savefig: str = None):
 
         # Environment
         pixels = self.__environment.copy()
