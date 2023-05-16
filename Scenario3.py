@@ -5,15 +5,16 @@ from RLAgent import RLAgent
 import utils
 from time import sleep
 import os
+import argparse
 
 
-def main():
+def main(args):
 
 	aTypes = ['UP', 'DOWN', 'LEFT', 'RIGHT']
 	gTypes = ['EMPTY', 'RED', 'GREEN', 'BLUE']
 
 	# Environment
-	env = FourRooms('rgb')
+	env = FourRooms('rgb', args.stochastic)
 
 	# Agent
 	agent = RLAgent(num_states=13*13*8,
@@ -33,7 +34,7 @@ def main():
 		done = False
 		total_reward = 0
 		
-		currX, currY = env._FourRooms__current_pos # type: ignore[attr]
+		currX, currY = env.getPosition()
 		cpy[currY][currX] = 5
 
 		packages = []
@@ -47,7 +48,7 @@ def main():
 		while not done:
 			action = agent.choose_action(state)
 
-			currX, currY = env._FourRooms__current_pos # type: ignore[attr]
+			currX, currY = env.getPosition()
 
 			val = cpy[currY][currX]
 			if val == 0:
@@ -106,4 +107,8 @@ def main():
 	env.showPath(-1)
 
 if __name__ == "__main__":
-	main()
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--stochastic', action='store_true', help='Add stochasticity to action space')
+	args = parser.parse_args()
+	main(args)
+	print(args.stochastic)
